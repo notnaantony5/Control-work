@@ -14,6 +14,7 @@ class Question:
         return (self.answer.strip().lower()
                 == answer.strip().lower())
 
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -27,6 +28,7 @@ class User:
             f":"
         )
         return answer
+
     def feedback(self,
                  question: Question,
                  positive=True):
@@ -39,20 +41,25 @@ class User:
             print(f"Ответ неверный!\n"
                   f"Правильный ответ: "
                   f"{question.answer}")
+
     def end(self):
         print(f"Поздравляю, {self.name}!"
               f"Вы набрали {self.points} баллов")
+
+
 class Quiz:
     def __init__(self):
         name = input("Введите имя: ")
         self.user = User(name)
         self.questions = self._read_questions()
+
     def _read_questions(self) -> list[Question]:
         with open("questions.json", 'r', encoding='utf-8') as f:
             return [
                 Question(**question)
                 for question in json.load(f)
             ]
+
     def game(self):
         for question in self.questions:
             answer = self.user.get_answer(question)
