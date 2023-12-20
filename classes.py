@@ -48,17 +48,12 @@ class User:
 
 
 class Quiz:
-    def __init__(self):
+    def __init__(self, filehandler):
         name = input("Введите имя: ")
         self.user = User(name)
-        self.questions = self._read_questions()
+        self.fh = filehandler
+        self.questions = self.fh.read()
 
-    def _read_questions(self) -> list[Question]:
-        with open("questions.json", 'r', encoding='utf-8') as f:
-            return [
-                Question(**question)
-                for question in json.load(f)
-            ]
 
     def game(self):
         for question in self.questions:
@@ -66,3 +61,36 @@ class Quiz:
             result = question.check(answer)
             self.user.feedback(question, positive=result)
         self.user.end()
+
+class JSONReader:
+    def __init__(self, path):
+        self.path = path
+
+    def read(self):
+        with open(self.path, 'r', encoding='utf-8') as f:
+            return [
+                Question(**question)
+                for question in json.load(f)
+            ]
+
+
+class CSVReader:
+    def __init__(self, path):
+        self.path = path
+
+    def read(self):
+        with open(self.path, 'r', encoding='utf-8') as f:
+            lines = f.read().split('\n')
+            names = lines[0].split(',')
+            data = [
+                {
+                    name: value
+                    for name, value in
+                    zip(names, line.split(','))
+                }
+                for line in lines[1:]
+            ]
+            return [
+                Question(**question)
+                for question in data
+            ]

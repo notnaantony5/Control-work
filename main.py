@@ -1,5 +1,5 @@
-from classes import Quiz
+from classes import Quiz, JSONReader, CSVReader
 
 if __name__ == "__main__":
-    quiz = Quiz()
+    quiz = Quiz(CSVReader("questions.csv"))
     quiz.game()
